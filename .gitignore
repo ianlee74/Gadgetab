@@ -1,4 +1,3 @@
-#OS junk files
 [Tt]humbs.db
 *.DS_Store
 *.tmp
@@ -36,5 +35,3 @@ Ankh.NoLoad
 _ReSharper*/
 *.resharper
 [Tt]est[Rr]esult*
-
-/cmd.exe - Shortcut.lnk
