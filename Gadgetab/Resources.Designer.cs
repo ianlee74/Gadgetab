@@ -38,6 +38,7 @@ namespace Gadgetab
         {
             ArialBold11 = -25401,
             Amienne48AA = -23108,
+            VerdanaBold24 = -7983,
             small = 13070,
             NinaB = 18060,
             Verdana12 = 19254,
@@ -47,6 +48,7 @@ namespace Gadgetab
         {
             mynameis = -3831,
             arrow_disabled = -3364,
+            LaunchButton = -528,
             arrow = 6605,
             Zombies = 7916,
         }

@@ -26,6 +26,9 @@ namespace Gadgetab
         readonly Font _fntHuge = Resources.GetFont(Resources.FontResources.Amienne48AA);
         readonly Font _fntVerdana12 = Resources.GetFont(Resources.FontResources.Verdana12);
         readonly Font _fntArialBold11 = Resources.GetFont(Resources.FontResources.ArialBold11);
+        private readonly Font _fntVerdanaBold24 = Resources.GetFont(Resources.FontResources.VerdanaBold24);
+
+        private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor" };
 
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
@@ -34,24 +37,116 @@ namespace Gadgetab
 
             SetupCP7(display_CP7);
           
-            TinkrCore.Instance.TouchEvent += (sender, type, pt) => Debug.Print("Touched!");
+            //TinkrCore.Instance.TouchEvent += (sender, type, pt) => Debug.Print("Touched!");
 
-            TwitterViewerForm();
+            //var appIcon = new AppbarIcon("abIcon1", Resources.GetBitmap(Resources.BitmapResources.arrow));
+            //appBar.AddControl(appIcon);
+
+
+            ZombieTwitForm();
             //Form1();
         }
 
-        private void TwitterViewerForm()
+        private Appbar BuildAppBar(string currentForm)
         {
-            var frm = new Form("frmTwitterFeed");
+            var appBar = new Appbar("appBar", _fntVerdanaBold24);
+
+            // Add menu items.
+            foreach (var menuItem in _menuItems)
+            {
+                if (menuItem != currentForm)
+                {
+                    appBar.AddMenuItem(menuItem);
+                }
+            }
+            appBar.AppMenuSelected += OnAppMenuSelected;
+            return appBar;
+        }
+
+        private void OnAppMenuSelected(object sender, int menuid, string menutext)
+        {
+            switch (menutext)
+            {
+                case "zombie cannon remote":
+                    ZombieCannonRemoteForm();
+                    break;
+                case "zombie twit":
+                    ZombieTwitForm();
+                    break;
+                case "zombie distractor":
+                    ZombieDistractorForm();
+                    break;
+            }
+        }
+
+        private void ZombieDistractorForm()
+        {
+            var frm = new Form("zombie distractor");
 
             // Add panel
             var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
             pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
 
+            // Add the app bar.
+            frm.AddControl(BuildAppBar(frm.Name));
+
+            // Add a title.
+            var title = new Label("lblTitle", "Zombie Distractor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
+            frm.AddControl(title);
+
+            // Add Pacman.
+            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width/2 - 150, frm.Height/2 - 150, 300, 300);
+            frm.AddControl(pnl1);
+
+            TinkrCore.ActiveContainer = frm;
+        }
+
+        private void ZombieCannonRemoteForm()
+        {
+            var frm = new Form("zombie cannon remote");
+
+            // Add panel
+            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
+            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
+            frm.AddControl(pnl);
+
+            // Add the app bar.
+            frm.AddControl(BuildAppBar(frm.Name));
+
+            // Add a title.
+            var title = new Label("lblTitle", "Zombie Cannon Remote", _fntHuge, frm.Width/2 - 175, 30)
+                            {Color = Gadgeteer.Color.Yellow};
+            frm.AddControl(title);
+
+            // Add a fire button.
+            var pic1 = new Picturebox("launchBtn", Resources.GetBitmap(Resources.BitmapResources.LaunchButton), frm.Width / 2 - 150, frm.Height/2 - 150, 300, 300);
+            //pic1.ButtonPressed += (sender, id) => Debug.Print("FIRE!");
+            frm.AddControl(pic1);
+
+            TinkrCore.ActiveContainer = frm;
+        }
+
+
+        private void ZombieTwitForm()
+        {
+            var frm = new Form("zombie twit");
+
+            // Add panel
+            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
+            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
+            frm.AddControl(pnl);
+
+            // Add the app bar.
+            frm.AddControl(BuildAppBar(frm.Name));
+
+            // Add a title.
+            var title = new Label("lblTitle", "Zombie Twit", _fntHuge, frm.Width / 2 - 100, 50) { Color = Gadgeteer.Color.Yellow };
+            frm.AddControl(title);
+
             // Add a listbox
-            var lb = new Listbox("lb1", _fntArialBold11, 0, 0, 500, 400,
-                                    new []{@"@zombieHunter Zombies are coming!"
+            var lb = new Listbox("lb1", _fntArialBold11, frm.Width / 2 - 200, frm.Height / 2 - 100, 400, 200,
+                                    new[]{@"@zombieHunter Zombies are coming!"
                                           ,@"@zombieHunter Zombies are getting closer!"
                                           ,@"@zombieHunter THEY'RE HERE!!!"
                                           ,@"@zombieHunter Send the Gadgets!!!"
@@ -59,7 +154,15 @@ namespace Gadgetab
                                           ,@"@zombieHunter ...I'll eat them later!"});
             frm.AddControl(lb);
 
+
             TinkrCore.ActiveContainer = frm;
+
+            var timer = new GT.Timer(2000);
+            timer.Tick += timer1 =>
+            {
+                lb.InsertAt("Tick.", 1);
+            };
+            timer.Start();
         }
 
         private void Form1()
