@@ -34,6 +34,14 @@ namespace Gadgetab
             return ((Microsoft.SPOT.Font)(Microsoft.SPOT.ResourceUtility.GetObject(ResourceManager, id)));
         }
         [System.SerializableAttribute()]
+        internal enum BitmapResources : short
+        {
+            pacman = -28336,
+            maze_walls = -6091,
+            LaunchButton = -528,
+            Zombies = 7916,
+        }
+        [System.SerializableAttribute()]
         internal enum FontResources : short
         {
             ArialBold11 = -25401,
@@ -42,15 +50,6 @@ namespace Gadgetab
             small = 13070,
             NinaB = 18060,
             Verdana12 = 19254,
-        }
-        [System.SerializableAttribute()]
-        internal enum BitmapResources : short
-        {
-            mynameis = -3831,
-            arrow_disabled = -3364,
-            LaunchButton = -528,
-            arrow = 6605,
-            Zombies = 7916,
         }
     }
 }

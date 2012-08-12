@@ -42,6 +42,20 @@
   <!-- Everything below here is custom to .NET MF / Gadgeteer template-->
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Pacman\BonusItemType.cs" />
+    <Compile Include="Pacman\GameCharacter.cs" />
+    <Compile Include="Pacman\GhiJoystickInputProvider.cs" />
+    <Compile Include="Pacman\Ghost.cs" />
+    <Compile Include="Pacman\Maze.cs" />
+    <Compile Include="Pacman\MazeCell.cs" />
+    <Compile Include="Pacman\Messages\AteBonusItemMessage.cs" />
+    <Compile Include="Pacman\Messages\AtePowerPillMessage.cs" />
+    <Compile Include="Pacman\Messages\CollidedWithPacmanMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanAteGhostMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanDeadMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanDyingMessage.cs" />
+    <Compile Include="Pacman\PacmanGame.cs" />
+    <Compile Include="Pacman\Player.cs" />
     <Compile Include="Program.generated.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -56,13 +70,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Gadgeteer">
-      <SpecificVersion>false</SpecificVersion>
+    <Reference Include="Gadgeteer, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Gadgeteer.Serial, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=1.0.5.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="GTM.GHIElectronics.Bluetooth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="GTM.GHIElectronics.Display_CP7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="GTM.GHIElectronics.Joystick, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Microsoft.SPOT.Graphics" />
@@ -109,10 +130,19 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\arrow.gif" />
-    <Content Include="Resources\arrow_disabled.gif" />
     <Content Include="Resources\LaunchButton.jpg" />
-    <Content Include="Resources\mynameis.gif" />
+    <Content Include="Pacman\Resources\maze_walls.bmp" />
+    <Content Include="Pacman\Resources\pacman.bmp" />
     <Content Include="Resources\Zombies.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF.Game\dotnetwarrior.NetMF.Game.csproj">
+      <Project>{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}</Project>
+      <Name>dotnetwarrior.NetMF.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF\dotnetwarrior.NetMF.csproj">
+      <Project>{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}</Project>
+      <Name>dotnetwarrior.NetMF</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

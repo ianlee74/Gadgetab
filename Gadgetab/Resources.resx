@@ -124,15 +124,6 @@
   <data name="ArialBold11" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\arialbold11.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="arrow" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\arrow.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_disabled" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\arrow_disabled.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="mynameis" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\mynameis.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="NinaB" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\NinaB.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
   </data>
@@ -150,5 +141,11 @@
   </data>
   <data name="Zombies" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\zombies.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="maze_walls" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>pacman\resources\maze_walls.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="pacman" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>pacman\resources\pacman.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

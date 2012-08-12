@@ -3,6 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gadgetab", "Gadgetab\Gadgetab.csproj", "{2814B215-B60A-4F7B-B71D-8EA1F1640F10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetwarrior.NetMF", "..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF\dotnetwarrior.NetMF.csproj", "{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotnetwarrior.NetMF.Game", "..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF.Game\dotnetwarrior.NetMF.Game.csproj", "{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{2814B215-B60A-4F7B-B71D-8EA1F1640F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2814B215-B60A-4F7B-B71D-8EA1F1640F10}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2814B215-B60A-4F7B-B71D-8EA1F1640F10}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
