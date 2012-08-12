@@ -106,9 +106,9 @@ namespace Pacman
       }
     }
 
-    public override void Draw(Bitmap surface)
+    public override void Draw(Bitmap surface, int xOffset, int yOffset)
     {
-      base.Draw(surface);
+      base.Draw(surface, xOffset, yOffset);
     }
 
     protected Direction GetOppositeDirection()

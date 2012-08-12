@@ -44,8 +44,8 @@ namespace Pacman
 
     public int Level { get; private set; }
 
-    public PacmanGame(Bitmap surface)
-      : base(surface)
+    public PacmanGame(Bitmap surface, int xOffset = 0, int yOffset = 0)
+      : base(surface, xOffset, yOffset)
     {
       Level = 1;      
     }
@@ -60,7 +60,7 @@ namespace Pacman
       _spriteSheet.MakeTransparent(Microsoft.SPOT.Presentation.Media.Color.Black);
 
       _maze = new Maze();
-      _maze.Draw(Surface);
+      _maze.Draw(Surface, XOffset, YOffset);
 
       _pacman = new Player(_spriteSheet, _maze);
 
@@ -373,15 +373,15 @@ namespace Pacman
         }
         else if (_showBonusScoreCountDown.IsRunning)
         {
-          _currentBonusSprite.Draw(Surface);
+          _currentBonusSprite.Draw(Surface, XOffset, YOffset);
         }
       }
     }
 
     private void UpdateHud(Bitmap surface, int score)
     {
-      int y = 10;
-      int x = 244;
+      int y = 10 + YOffset;
+      int x = 244 + XOffset;
 
       surface.DrawText("Level", _font, Color.White, x, y);
       surface.DrawText(Level.ToString(), _font, Color.White, x, y + 20);

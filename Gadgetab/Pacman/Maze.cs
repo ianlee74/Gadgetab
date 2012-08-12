@@ -152,12 +152,12 @@ namespace Pacman
       return result;
     }
 
-    public override void Draw(Bitmap surface)
+    public override void Draw(Bitmap surface, int xOffset, int yOffset)
     {
-      surface.DrawImage(0, 0, _cache, 0, 0, 320, 240);
+      surface.DrawImage(xOffset, yOffset, _cache, 0, 0, 320, 240);
       if (_bonusItem != BonusItemType.None)
       {
-        surface.DrawImage(112, 144, _mazeSpriteSheet, 
+        surface.DrawImage(112 + xOffset, 144 + yOffset, _mazeSpriteSheet, 
           _bonusItemRect.X, _bonusItemRect.Y, 
           _bonusItemRect.Width, _bonusItemRect.Height);
       }

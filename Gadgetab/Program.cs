@@ -85,6 +85,9 @@ namespace Gadgetab
 
         private void ZombieDistractorForm()
         {
+            const int gameWidth = 320;
+            const int gameHeight = 240;
+
             var frm = new Form("zombie distractor");
 
             // Add panel
@@ -100,14 +103,14 @@ namespace Gadgetab
             pnl.AddControl(title);
 
             // Add Pacman.
-            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width/2 - 150, frm.Height/2 - 150, 300, 300);
+            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2, gameWidth, gameHeight);
             pnl.AddControl(pnl1);
 
             TinkrCore.ActiveContainer = frm;
 
             //var surface = (Bitmap)(display_CP7.SimpleGraphics.GetType().GetField("_display", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(display_CP7.SimpleGraphics));
             var surface = TinkrCore.Screen;
-            _pacmanGame = new PacmanGame(surface);
+            _pacmanGame = new PacmanGame(surface, pnl1.Left, pnl1.Top);
             _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(joystick));
             _pacmanGame.Initialize();
         }
@@ -144,6 +147,15 @@ namespace Gadgetab
 
         private void ZombieTwitForm()
         {
+            var tweets = new[]{
+                                    @"@zombieHunter Zombies are coming!"
+                                    , @"@zombieHunter Zombies are getting closer!"
+                                    , @"@zombieHunter THEY'RE HERE!!!"
+                                    , @"@zombieHunter Send the Gadgets!!!"
+                                    , @"@zombieHunter Tell my wife and kids..."
+                                    , @"@zombieHunter ...I'll eat them later!"
+                                };
+
             var frm = new Form("zombie twit");
 
             // Add panel
@@ -159,23 +171,24 @@ namespace Gadgetab
             pnl.AddControl(title);
 
             // Add a listbox
-            var lb = new Listbox("lb1", _fntArialBold11, frm.Width / 2 - 200, frm.Height / 2 - 100, 400, 200,
-                                    new[]{@"@zombieHunter Zombies are coming!"
-                                          ,@"@zombieHunter Zombies are getting closer!"
-                                          ,@"@zombieHunter THEY'RE HERE!!!"
-                                          ,@"@zombieHunter Send the Gadgets!!!"
-                                          ,@"@zombieHunter Tell my wife and kids..."
-                                          ,@"@zombieHunter ...I'll eat them later!"});
+            var lb = new Listbox("lb1", _fntArialBold11, frm.Width / 2 - 200, frm.Height / 2 - 100, 400, 200, null);
             pnl.AddControl(lb);
 
 
             TinkrCore.ActiveContainer = frm;
 
+            byte lastTweet = 0;
             var timer = new GT.Timer(2000);
             timer.Tick += timer1 =>
-            {
-                lb.InsertAt("Tick.", 1);
-            };
+                              {
+                                  if(lastTweet >= tweets.Length)
+                                  {
+                                      timer.Stop();
+                                      return;
+                                  }
+                                  //lb.InsertAt(tweets[lastTweet++], 1);
+                                  lb.AddItem(tweets[lastTweet++]);
+                              };
             timer.Start();
         }
 
