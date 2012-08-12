@@ -359,16 +359,16 @@ namespace Pacman
         {
           // Show 'Game Over'
           Surface.DrawImage(
-            (240 - 72) / 2,
-            ((240 - 8) / 2) + 16,
+            (240 - 72) / 2 + XOffset,
+            ((240 - 8) / 2) + 16 + YOffset,
             _spriteSheet, 0, 104, 72, 8);
         }
         else if (_readyCountDown.IsRunning)
         {
           // Show 'Ready!' Image
           Surface.DrawImage(
-            (240 - 48) / 2,
-            ((240 - 8) / 2) + 16,
+            (240 - 48) / 2 + XOffset,
+            ((240 - 8) / 2) + 16 + YOffset,
             _spriteSheet, 80, 96, 48, 8);
         }
         else if (_showBonusScoreCountDown.IsRunning)

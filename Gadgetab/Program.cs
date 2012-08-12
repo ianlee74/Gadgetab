@@ -80,8 +80,38 @@ namespace Gadgetab
                 case "zombie distractor":
                     ZombieDistractorForm();
                     break;
+                case "zombie health monitor":
+                    ZombieHealthMonitorForm();
+                    break;
             }
         }
+
+        private void ZombieHealthMonitorForm()
+        {
+            const int gameWidth = 320;
+            const int gameHeight = 240;
+
+            var frm = new Form("zombie health monitor");
+
+            // Add panel
+            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
+            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
+            frm.AddControl(pnl);
+
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
+
+            // Add a title.
+            var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
+            pnl.AddControl(title);
+
+            // Add Pacman.
+            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width / 2 - gameWidth / 2, frm.Height / 2 - gameHeight / 2, gameWidth, gameHeight);
+            pnl.AddControl(pnl1);
+
+            TinkrCore.ActiveContainer = frm;
+        }
+
 
         private void ZombieDistractorForm()
         {
@@ -102,15 +132,11 @@ namespace Gadgetab
             var title = new Label("lblTitle", "Zombie Distractor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
-            // Add Pacman.
-            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2, gameWidth, gameHeight);
-            pnl.AddControl(pnl1);
-
             TinkrCore.ActiveContainer = frm;
 
-            //var surface = (Bitmap)(display_CP7.SimpleGraphics.GetType().GetField("_display", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(display_CP7.SimpleGraphics));
+            // Add Pacman.
             var surface = TinkrCore.Screen;
-            _pacmanGame = new PacmanGame(surface, pnl1.Left, pnl1.Top);
+            _pacmanGame = new PacmanGame(surface, frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2);
             _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(joystick));
             _pacmanGame.Initialize();
         }
