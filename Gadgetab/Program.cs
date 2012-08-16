@@ -30,7 +30,7 @@ namespace Gadgetab
         readonly Font _fntArialBold11 = Resources.GetFont(Resources.FontResources.ArialBold11);
         private readonly Font _fntVerdanaBold24 = Resources.GetFont(Resources.FontResources.VerdanaBold24);
 
-        private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor" };
+        private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor", "zombie health monitor" };
 
         private PacmanGame _pacmanGame = null;
 
@@ -46,7 +46,7 @@ namespace Gadgetab
 
         private Appbar BuildAppBar(string currentForm)
         {
-            var appBar = new Appbar("appBar", _fntVerdanaBold24);
+            var appBar = new Appbar("appBar",_fntVerdana12, _fntVerdanaBold24);
 
             // Add menu items.
             foreach (var menuItem in _menuItems)
@@ -72,7 +72,8 @@ namespace Gadgetab
             switch (menutext)
             {
                 case "zombie cannon remote":
-                    ZombieCannonRemoteForm();
+                    //ZombieCannonRemoteForm();
+                    AuthenticationForm();
                     break;
                 case "zombie twit":
                     ZombieTwitForm();
@@ -88,9 +89,6 @@ namespace Gadgetab
 
         private void ZombieHealthMonitorForm()
         {
-            const int gameWidth = 320;
-            const int gameHeight = 240;
-
             var frm = new Form("zombie health monitor");
 
             // Add panel
@@ -105,9 +103,9 @@ namespace Gadgetab
             var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
-            // Add Pacman.
-            var pnl1 = new Skewworks.Tinkr.Controls.Panel("launchPnl", frm.Width / 2 - gameWidth / 2, frm.Height / 2 - gameHeight / 2, gameWidth, gameHeight);
-            pnl.AddControl(pnl1);
+            // Add Heart Rate Graph.
+            var graph = new Picturebox("heartRateGraph", null, 100, 200, 600, 200);
+           pnl.AddControl(graph);
 
             TinkrCore.ActiveContainer = frm;
         }
@@ -139,6 +137,31 @@ namespace Gadgetab
             _pacmanGame = new PacmanGame(surface, frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2);
             _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(joystick));
             _pacmanGame.Initialize();
+        }
+
+        private void AuthenticationForm()
+        {
+            var frm = new Form("authentication");
+
+            // Add panel
+            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480)
+                          {BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies)};
+            frm.AddControl(pnl);
+
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
+
+            // Add a title.
+            var title = new Label("lblTitle", "Authentication is Required", _fntHuge, frm.Width / 2 - 175, frm.Height/2 - 5) { Color = Gadgeteer.Color.Red };
+            pnl.AddControl(title);
+
+            rfid.CardIDRecieved += (sender, id) =>
+                                       {
+                                           title.Text = "Welcome back, Mr. Lee.";
+                                           Thread.Sleep(2000);
+                                           ZombieCannonRemoteForm();
+                                       };
+            TinkrCore.ActiveContainer = frm;
         }
 
         private void ZombieCannonRemoteForm()
@@ -275,11 +298,11 @@ namespace Gadgetab
             if (ptLast.X > 800)
             {
                 if (ptLast.Y >= 0 && ptLast.Y <= 50)
-                    TinkrCore.Instance.RaiseButtonReleased(TinkrCore.UpButtonID);
+                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Up);
                 else if (ptLast.Y >= 100 && ptLast.Y <= 150)
-                    TinkrCore.Instance.RaiseButtonReleased(TinkrCore.SelectButtonID);
+                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Select);
                 else if (ptLast.Y >= 200 && ptLast.Y <= 250)
-                    TinkrCore.Instance.RaiseButtonReleased(TinkrCore.DownButtonID);
+                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Down);
             }
             else
                 TinkrCore.Instance.RaiseTouchEvent(TouchType.TouchUp, ptLast);
@@ -312,17 +335,17 @@ namespace Gadgetab
 
         private void display_CP7_homePressed(Display_CP7 sender)
         {
-            TinkrCore.Instance.RaiseButtonPressed(TinkrCore.UpButtonID);
+            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Up);
         }
 
         private void display_CP7_menuPressed(Display_CP7 sender)
         {
-            TinkrCore.Instance.RaiseButtonPressed(TinkrCore.SelectButtonID);
+            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Select);
         }
 
         private void display_CP7_backPressed(Display_CP7 sender)
         {
-            TinkrCore.Instance.RaiseButtonPressed(TinkrCore.DownButtonID);
+            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Down);
         }
 
         private void CalcDir(Point e)
