@@ -42,6 +42,8 @@
   <!-- Everything below here is custom to .NET MF / Gadgeteer template-->
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
+    <Compile Include="Forms\GadgetabForm.cs" />
+    <Compile Include="Forms\ZombieDistractorForm.cs" />
     <Compile Include="Pacman\BonusItemType.cs" />
     <Compile Include="Pacman\GameCharacter.cs" />
     <Compile Include="Pacman\GhiJoystickInputProvider.cs" />
@@ -148,4 +150,5 @@
       <Name>dotnetwarrior.NetMF</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
 </Project>

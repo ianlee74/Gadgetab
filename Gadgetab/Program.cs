@@ -69,6 +69,9 @@ namespace Gadgetab
                 _pacmanGame = null;
             }
 
+            TinkrCore.ActiveContainer = null;
+            Debug.GC(true);
+
             switch (menutext)
             {
                 case "zombie cannon remote":
@@ -96,17 +99,17 @@ namespace Gadgetab
             pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
 
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
             // Add a title.
             var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
             // Add Heart Rate Graph.
             var graph = new Picturebox("heartRateGraph", null, 100, 200, 600, 200);
-           pnl.AddControl(graph);
+            pnl.AddControl(graph);
 
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
+           
             TinkrCore.ActiveContainer = frm;
         }
 
@@ -123,20 +126,23 @@ namespace Gadgetab
             pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
 
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
             // Add a title.
             var title = new Label("lblTitle", "Zombie Distractor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
+
             TinkrCore.ActiveContainer = frm;
 
             // Add Pacman.
-            var surface = TinkrCore.Screen;
-            _pacmanGame = new PacmanGame(surface, frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2);
+            //var surface = TinkrCore.Screen;
+            var surface = new Skewworks.Tinkr.Controls.Picturebox("pacman", new Bitmap(gameWidth, gameHeight), frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2);
+            _pacmanGame = new PacmanGame(surface.Image);
+            //_pacmanGame = new PacmanGame(surface, frm.Width / 2 - gameWidth / 2, frm.Height / 2 - gameHeight / 2);
             _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(joystick));
             _pacmanGame.Initialize();
+            surface.Invalidate();
         }
 
         private void AuthenticationForm()
@@ -148,9 +154,6 @@ namespace Gadgetab
                           {BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies)};
             frm.AddControl(pnl);
 
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
             // Add a title.
             var title = new Label("lblTitle", "Authentication is Required", _fntHuge, frm.Width / 2 - 175, frm.Height/2 - 5) { Color = Gadgeteer.Color.Red };
             pnl.AddControl(title);
@@ -161,6 +164,10 @@ namespace Gadgetab
                                            Thread.Sleep(2000);
                                            ZombieCannonRemoteForm();
                                        };
+
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
+            
             TinkrCore.ActiveContainer = frm;
         }
 
@@ -172,9 +179,6 @@ namespace Gadgetab
             var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
             pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
 
             // Add a title.
             var title = new Label("lblTitle", "Zombie Cannon Remote", _fntHuge, frm.Width/2 - 175, 30)
@@ -189,6 +193,9 @@ namespace Gadgetab
             pic1.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.LaunchButton);
             pic1.Tap += (sender, id) => Debug.Print("FIRE!");
             pnl.AddControl(pic1);
+
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
 
             TinkrCore.ActiveContainer = frm;
         }
@@ -212,9 +219,6 @@ namespace Gadgetab
             pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
 
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
             // Add a title.
             var title = new Label("lblTitle", "Zombie Twit", _fntHuge, frm.Width / 2 - 100, 50) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
@@ -223,6 +227,8 @@ namespace Gadgetab
             var lb = new Listbox("lb1", _fntArialBold11, frm.Width / 2 - 200, frm.Height / 2 - 100, 400, 200, null);
             pnl.AddControl(lb);
 
+            // Add the app bar.
+            pnl.AddControl(BuildAppBar(frm.Name));
 
             TinkrCore.ActiveContainer = frm;
 
