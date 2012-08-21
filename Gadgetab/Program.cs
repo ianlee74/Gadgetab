@@ -8,8 +8,10 @@ using Microsoft.SPOT.Presentation.Media;
 using Microsoft.SPOT.Touch;
 
 using Gadgeteer.Networking;
+using Skewworks.Standards.NETMF.Applications;
 using Skewworks.Tinkr;
 using Skewworks.Tinkr.Controls;
+using Skewworks.Tinkr.GadgeteerHelpers;
 using Skewworks.Tinkr.Modals;
 using GT = Gadgeteer;
 using GTM = Gadgeteer.Modules;
@@ -17,13 +19,15 @@ using Gadgeteer.Modules.GHIElectronics;
 using Colors = Skewworks.Tinkr.Colors;
 using HorizontalAlignment = Skewworks.Tinkr.HorizontalAlignment;
 using Panel = Microsoft.SPOT.Presentation.Controls.Panel;
-using Pacman;
 
 namespace Gadgetab
 {
     public partial class Program
     {
-        private static Transitions _ani;
+        private static Form _mainForm;
+        private static Appbar _appBar;
+        private static CP7TouchHandler CP7Handler;
+        private static IApplication _usingBluetooth = null;
 
         readonly Font _fntHuge = Resources.GetFont(Resources.FontResources.Amienne48AA);
         readonly Font _fntVerdana12 = Resources.GetFont(Resources.FontResources.Verdana12);
@@ -32,18 +36,99 @@ namespace Gadgetab
 
         private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor", "zombie health monitor" };
 
-        private PacmanGame _pacmanGame = null;
-
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
         {
-            Debug.Print("Program Started");
+            Debug.Print("Gadgetab 1.0 Beta");
+            Debug.Print("");
 
-            SetupCP7(display_CP7);
-            
-            ZombieTwitForm();
+            // Initialize Touch
+            Graphics.Initialize(TouchCollectionMode.UserHandledOrCP7);
+            CP7Handler = new CP7TouchHandler(display_CP7);
+            Debug.Print("Touch: CP7");
+
+            // Subscribe to application events
+            Graphics.Host.ApplicationLaunched += Host_ApplicationLaunched;
+            Graphics.Host.ApplicationClosing += Host_ApplicationClosing;
+
+            // Launch Home
+            new Thread(Home).Start();
         }
 
+        void Home()
+        {
+            _mainForm = new Form("frmMain") 
+                {BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies)};
+            //frmMain.Backcolor = Colors.White;
+
+            // Appbar
+            _appBar = new Appbar("ab1", Fonts.Calibri9, Fonts.Calibri24);
+            _appBar.AddMenuItems(_menuItems);
+//            _appBar.AppMenuSelected += OnAppMenuSelected;
+            _appBar.AppMenuSelected += new OnAppMenuSelected((object sender, int id, string value) => new Thread(OnAppMenuSelected).Start());
+
+            _mainForm.AddControl(_appBar);
+
+            // Bluetooth Icon
+            _appBar.AddControl(new AppbarIcon("aiBluetooth", Resources.GetBitmap(Resources.BitmapResources.bluetooth_off)));
+
+            // Activate
+            Graphics.ActiveContainer = _mainForm;
+        }
+
+        /*
+        void AppbarItemSelected()
+        {
+            Waiter w;
+            switch (_appBar.SelectedIndex)
+            {
+                case 0:
+                    w = new Waiter("Loading Application", Fonts.Calibri14);
+                    w.Start();
+                    Graphics.Host.LaunchApplication(Resources.GetBytes(Resources.BinaryResources.ZombieTwit));
+                    IContainer act = Graphics.ActiveContainer;
+                    w.Stop();
+                    Graphics.ActiveContainer = act;
+                    Graphics.ActiveContainer.Invalidate();
+                    break;
+                case 1:
+                    w = new Waiter("Terminating Application", Fonts.Calibri14);
+                    w.Start();
+                    Graphics.Host.TerminateApplication(Graphics.Host.RunningApplications[0]);
+                    w.Stop();
+                    Graphics.ActiveContainer.Invalidate();
+                    break;
+            }
+        }
+        */
+
+        void Host_ApplicationClosing(object sender, IApplication app)
+        {
+            Graphics.ActiveContainer = _mainForm;
+            if (_usingBluetooth == app)
+            {
+                _usingBluetooth = null;
+                AppbarIcon bi = (AppbarIcon)_appBar.GetChildByName("aiBluetooth");
+                bi.Image = Resources.GetBitmap(Resources.BitmapResources.bluetooth_off);
+            }
+        }
+
+        void Host_ApplicationLaunched(object sender, IApplication app)
+        {
+            app.SendMessage(_appBar, "Appbar");
+            app.SendMessage(((Form)Graphics.ActiveContainer).BackgroundImage, "FormBackgroundImage");
+
+            // Assign Bluetooth Serial
+            if (_usingBluetooth == null)
+            {
+                if (app.SendMessage(bluetooth.serialPort, "Serial") == "USING")
+                {
+                    _usingBluetooth = app;
+                    app.SendMessage(_appBar.GetChildByName("aiBluetooth"), "BluetoothAppbarIcon");
+                }
+            }
+        }
+/*
         private Appbar BuildAppBar(string currentForm)
         {
             var appBar = new Appbar("appBar",_fntVerdana12, _fntVerdanaBold24);
@@ -59,189 +144,36 @@ namespace Gadgetab
             appBar.AppMenuSelected += OnAppMenuSelected;
             return appBar;
         }
-
-        private void OnAppMenuSelected(object sender, int menuid, string menutext)
+*/
+        private static void OnAppMenuSelected() //object sender, int id, string value)
         {
-            if (_pacmanGame != null)
+            byte[] bin = null;
+            switch (_appBar.SelectedIndex)
             {
-                _pacmanGame.Enabled = false;
-                _pacmanGame.Stop();
-                _pacmanGame = null;
-            }
-
-            switch (menutext)
-            {
-                case "zombie cannon remote":
-                    //ZombieCannonRemoteForm();
-                    AuthenticationForm();
+                case 0: // "zombie cannon remote":
+                    bin = Resources.GetBytes(Resources.BinaryResources.ZombieCannonRemote);
                     break;
-                case "zombie twit":
-                    ZombieTwitForm();
+                case 1: // "zombie twit":
+                    bin = Resources.GetBytes(Resources.BinaryResources.ZombieTwit);
                     break;
-                case "zombie distractor":
-                    ZombieDistractorForm();
+                case 2: //"zombie distractor":
+                    //bin = Resources.GetBytes(Resources.BinaryResources.ZombieDistractor);
                     break;
-                case "zombie health monitor":
-                    ZombieHealthMonitorForm();
+                case 3: //"zombie health monitor":
+                    bin = Resources.GetBytes(Resources.BinaryResources.ZombieHealthMonitor);
                     break;
             }
+            if (bin == null) return;
+            var w = new Waiter("Loading Application", Fonts.Calibri14);
+            w.Start();
+            Graphics.Host.LaunchApplication(bin);
+            IContainer act = Graphics.ActiveContainer;
+            w.Stop();
+            Graphics.ActiveContainer = act;
+            Graphics.ActiveContainer.Invalidate();
         }
 
-        private void ZombieHealthMonitorForm()
-        {
-            var frm = new Form("zombie health monitor");
-
-            // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
-            frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
-            // Add a title.
-            var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
-            pnl.AddControl(title);
-
-            // Add Heart Rate Graph.
-            var graph = new Picturebox("heartRateGraph", null, 100, 200, 600, 200);
-           pnl.AddControl(graph);
-
-            TinkrCore.ActiveContainer = frm;
-        }
-
-
-        private void ZombieDistractorForm()
-        {
-            const int gameWidth = 320;
-            const int gameHeight = 240;
-
-            var frm = new Form("zombie distractor");
-
-            // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
-            frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
-            // Add a title.
-            var title = new Label("lblTitle", "Zombie Distractor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
-            pnl.AddControl(title);
-
-            TinkrCore.ActiveContainer = frm;
-
-            // Add Pacman.
-            var surface = TinkrCore.Screen;
-            _pacmanGame = new PacmanGame(surface, frm.Width/2 - gameWidth/2, frm.Height/2 - gameHeight/2);
-            _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(joystick));
-            _pacmanGame.Initialize();
-        }
-
-        private void AuthenticationForm()
-        {
-            var frm = new Form("authentication");
-
-            // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480)
-                          {BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies)};
-            frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
-            // Add a title.
-            var title = new Label("lblTitle", "Authentication is Required", _fntHuge, frm.Width / 2 - 175, frm.Height/2 - 5) { Color = Gadgeteer.Color.Red };
-            pnl.AddControl(title);
-
-            rfid.CardIDRecieved += (sender, id) =>
-                                       {
-                                           title.Text = "Welcome back, Mr. Lee.";
-                                           Thread.Sleep(2000);
-                                           ZombieCannonRemoteForm();
-                                       };
-            TinkrCore.ActiveContainer = frm;
-        }
-
-        private void ZombieCannonRemoteForm()
-        {
-            var frm = new Form("zombie cannon remote");
-
-            // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
-            frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
-            // Add a title.
-            var title = new Label("lblTitle", "Zombie Cannon Remote", _fntHuge, frm.Width/2 - 175, 30)
-                            {Color = Gadgeteer.Color.Yellow};
-            pnl.AddControl(title);
-
-            // Add a fire button.
-            //var pic1 = new Picturebox("launchBtn", Resources.GetBitmap(Resources.BitmapResources.LaunchButton), frm.Width / 2 - 150, frm.Height/2 - 150, 300, 300);
-            //pic1.ButtonPressed += (sender, id) => Debug.Print("FIRE!");
-            //pnl.AddControl(pic1);
-            var pic1 = new Skewworks.Tinkr.Controls.Panel("launchBtn",frm.Width / 2 - 150, frm.Height/2 - 150, 300, 300);
-            pic1.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.LaunchButton);
-            pic1.Tap += (sender, id) => Debug.Print("FIRE!");
-            pnl.AddControl(pic1);
-
-            TinkrCore.ActiveContainer = frm;
-        }
-
-
-        private void ZombieTwitForm()
-        {
-            var tweets = new[]{
-                                    @"@zombieHunter Zombies are coming!"
-                                    , @"@zombieHunter Zombies are getting closer!"
-                                    , @"@zombieHunter THEY'RE HERE!!!"
-                                    , @"@zombieHunter Send the Gadgets!!!"
-                                    , @"@zombieHunter Tell my wife and kids..."
-                                    , @"@zombieHunter ...I'll eat them later!"
-                                };
-
-            var frm = new Form("zombie twit");
-
-            // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
-            frm.AddControl(pnl);
-
-            // Add the app bar.
-            pnl.AddControl(BuildAppBar(frm.Name));
-
-            // Add a title.
-            var title = new Label("lblTitle", "Zombie Twit", _fntHuge, frm.Width / 2 - 100, 50) { Color = Gadgeteer.Color.Yellow };
-            pnl.AddControl(title);
-
-            // Add a listbox
-            var lb = new Listbox("lb1", _fntArialBold11, frm.Width / 2 - 200, frm.Height / 2 - 100, 400, 200, null);
-            pnl.AddControl(lb);
-
-
-            TinkrCore.ActiveContainer = frm;
-
-            byte lastTweet = 0;
-            var timer = new GT.Timer(2000);
-            timer.Tick += timer1 =>
-                              {
-                                  if(lastTweet >= tweets.Length)
-                                  {
-                                      timer.Stop();
-                                      return;
-                                  }
-                                  //lb.InsertAt(tweets[lastTweet++], 1);
-                                  lb.AddItem(tweets[lastTweet++]);
-                              };
-            timer.Start();
-        }
-
-
+/* Old CP7 Setup
 #region CP7 Setup
 
         private Point ptLast;
@@ -404,6 +336,6 @@ namespace Gadgetab
             TinkrCore.Instance.RaiseTouchEvent(_tt, e, dDiff);
         }
 #endregion
-
+*/
     }
 }

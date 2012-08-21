@@ -121,40 +121,13 @@
   <data name="Amienne48AA" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\amienne48aa.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="ArialBold11" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\arialbold11.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
+  <data name="maze_walls" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>pacman\resources\maze_walls.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="NinaB" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\NinaB.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
+    <value>resources\ninab.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="small" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\small.tinyfnt;System.Byte[], mscorlib, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="Verdana12" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\verdana12.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="VerdanaBold24" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\verdanabold24.tinyfnt;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="Zombies" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombies.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bluetooth_off" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\bluetooth_off.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="bluetooth_on" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\bluetooth_on.gif;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="ZombieCannonRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombiecannonremote.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="ZombieHealthMonitor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombiehealthmonitor.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="ZombieDistractor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombiedistractor.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="ZombieTwit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombietwit.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
+  <data name="pacman" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>pacman\resources\pacman.bmp;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

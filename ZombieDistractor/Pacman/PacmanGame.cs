@@ -1,8 +1,8 @@
 // Copyright (c) 2012 Chris Taylor
 
-using Gadgetab;
 using Microsoft.SPOT;
 using Gadgeteer;
+using ZombieDistractor;
 using dotnetwarrior.NetMF.Diagnostics;
 using dotnetwarrior.NetMF.Game;
 

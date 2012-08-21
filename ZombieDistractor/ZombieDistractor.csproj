@@ -6,12 +6,12 @@
     <!--VS2010 product version-->
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2814B215-B60A-4F7B-B71D-8EA1F1640F10}</ProjectGuid>
+    <ProjectGuid>{51CE4BC1-0E68-4F05-A286-A04ED811354F}</ProjectGuid>
     <!--This is an executable-->
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Gadgetab</RootNamespace>
-    <AssemblyName>Gadgetab</AssemblyName>
+    <RootNamespace>ZombieDistractor</RootNamespace>
+    <AssemblyName>ZombieDistractor</AssemblyName>
     <TargetFrameworkVersion>v4.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <!--Identify this as a MicroFramework, CSharp project-->
@@ -39,16 +39,28 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <!-- Everything below here is custom to .NET MF / Gadgeteer template-->
   <Import Project="$(NetMfTargetsBaseDir)$(TargetFrameworkVersion)\CSharp.Targets" />
   <ItemGroup>
-    <Compile Include="Program.generated.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Program.gadgeteer</DependentUpon>
-    </Compile>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Pacman\BonusItemType.cs" />
+    <Compile Include="Pacman\GameCharacter.cs" />
+    <Compile Include="Pacman\GhiJoystickInputProvider.cs" />
+    <Compile Include="Pacman\Ghost.cs" />
+    <Compile Include="Pacman\Maze.cs" />
+    <Compile Include="Pacman\MazeCell.cs" />
+    <Compile Include="Pacman\Messages\AteBonusItemMessage.cs" />
+    <Compile Include="Pacman\Messages\AtePowerPillMessage.cs" />
+    <Compile Include="Pacman\Messages\CollidedWithPacmanMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanAteGhostMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanDeadMessage.cs" />
+    <Compile Include="Pacman\Messages\PacmanDyingMessage.cs" />
+    <Compile Include="Pacman\PacmanGame.cs" />
+    <Compile Include="Pacman\Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -57,35 +69,16 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gadgeteer, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Gadgeteer.Serial, Version=2.42.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="GHIElectronics.Gadgeteer.FEZHydra, Version=1.0.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="GTM.GHIElectronics.Bluetooth, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-    <Reference Include="GTM.GHIElectronics.Display_CP7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+    <Reference Include="GTM.GHIElectronics.Joystick, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.SPOT.Graphics" />
     <Reference Include="Microsoft.SPOT.Hardware" />
     <Reference Include="Microsoft.SPOT.Hardware.SerialPort" />
-    <Reference Include="Microsoft.SPOT.IO" />
     <Reference Include="Microsoft.SPOT.Native" />
-    <Reference Include="Microsoft.SPOT.Net" />
-    <Reference Include="Microsoft.SPOT.Net.Security" />
     <Reference Include="Microsoft.SPOT.TinyCore" />
-    <Reference Include="Microsoft.SPOT.Touch" />
     <Reference Include="mscorlib" />
     <Reference Include="Skewworks.Tinkr, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Skewworks.Tinkr.Controls, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Skewworks.Tinkr.Controls.Extended, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Skewworks.Tinkr.GadgeteerHelpers, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Skewworks.Tinkr.Modals, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="System" />
-    <Reference Include="System.Http" />
     <Reference Include="System.IO" />
   </ItemGroup>
   <ItemGroup>
@@ -96,37 +89,25 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Program.gadgeteer">
-      <Generator>GadgeteerFileCodeGenerator</Generator>
-      <LastGenOutput>Program.generated.cs</LastGenOutput>
-    </None>
-    <None Include="Program.gadgeteer.diagram">
-      <DependentUpon>Program.gadgeteer</DependentUpon>
-    </None>
-    <None Include="Resources\Amienne48AA.tinyfnt" />
-    <None Include="Resources\ArialBold11.tinyfnt" />
-    <None Include="Resources\NinaB.tinyfnt" />
-    <None Include="Resources\small.tinyfnt" />
-    <None Include="Resources\Verdana12.tinyfnt" />
-    <None Include="Resources\VerdanaBold24.tinyfnt" />
-    <None Include="Resources\ZombieCannonRemote.pe" />
-    <None Include="Resources\ZombieDistractor.pe" />
-    <None Include="Resources\ZombieHealthMonitor.pe" />
-    <None Include="Resources\ZombieTwit.pe" />
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Resources\bluetooth_off.gif" />
-    <Content Include="Resources\bluetooth_on.gif" />
-    <Content Include="Resources\LaunchButton.jpg" />
-    <Content Include="Resources\Zombies.gif" />
+    <Content Include="Pacman\Resources\maze_walls.bmp" />
+    <Content Include="Pacman\Resources\pacman.bmp" />
   </ItemGroup>
-  <PropertyGroup>
-    <PreBuildEvent>Copy "$(SolutionDir)ZombieCannonRemote\bin\Debug\le\ZombieCannonRemote.pe" "$(ProjectDir)Resources\ZombieCannonRemote.pe"
-Copy "$(SolutionDir)ZombieDistractor\bin\Debug\le\ZombieDistractor.pe" "$(ProjectDir)Resources\ZombieDistractor.pe"
-Copy "$(SolutionDir)ZombieHealthMonitor\bin\Debug\le\ZombieHealthMonitor.pe" "$(ProjectDir)Resources\ZombieHealthMonitor.pe"
-Copy "$(SolutionDir)ZombieTwit\bin\Debug\le\ZombieTwit.pe" "$(ProjectDir)Resources\ZombieTwit.pe"</PreBuildEvent>
-  </PropertyGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF.Game\dotnetwarrior.NetMF.Game.csproj">
+      <Project>{936EE92D-5A1F-4F2B-B867-D7E5EEE223B1}</Project>
+      <Name>dotnetwarrior.NetMF.Game</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\chrismcstuff\FEZSpider\dotnetwarrior.NetMF\dotnetwarrior.NetMF.csproj">
+      <Project>{6B0E1A65-A063-4727-AAE2-A4B91A93FFA0}</Project>
+      <Name>dotnetwarrior.NetMF</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Amienne48AA.tinyfnt" />
+    <None Include="Resources\NinaB.tinyfnt" />
+  </ItemGroup>
 </Project>
