@@ -1,109 +1,97 @@
 using System;
-using System.IO.Ports;
 using System.Threading;
+
 using Microsoft.SPOT;
+
+using dotnetwarrior.NetMF.Diagnostics;
 using Pacman;
-using Skewworks.Standards.NETMF.Applications;
-using Skewworks.Standards.NETMF.Graphics;
 
 using Skewworks.Tinkr;
 using Skewworks.Tinkr.Controls;
+using Skewworks.Tinkr.Modals;
+
+using Skewworks.Standards.NETMF.Applications;
+using Skewworks.Standards.NETMF.Graphics;
 
 namespace ZombieDistractor
 {
     [Serializable]
-    public class Class1 : MarshalByRefObject, IApplication
+    public class PacMan : MarshalByRefObject, IApplication
     {
-        private Appbar _ai;
-        private PacmanGame _pacmanGame = null;
-        private Gadgeteer.Modules.GHIElectronics.Joystick _joystick;
 
-        readonly Font _fntHuge = Resources.GetFont(Resources.FontResources.Amienne48AA);
-        //readonly Font _fntVerdana12 = Resources.GetFont(Resources.FontResources.Verdana12);
-        //readonly Font _fntArialBold11 = Resources.GetFont(Resources.FontResources.ArialBold11);
-        //private readonly Font _fntVerdanaBold24 = Resources.GetFont(Resources.FontResources.VerdanaBold24);
+        PacmanGame game;
+        GhiJoystickInputProvider joystick;
+
+        public ProductDetails ProductDetails
+        {
+            get { return new ProductDetails("Pacman", "Chris Taylor's Pacman", "Skewworks", "2012 Chris Taylor", "1.2"); }
+        }
 
         public void Main(string ApplicationPath, string[] Args)
         {
-#if DEBUG
-            Debug.Print("Main");
-#endif
-            const int gameWidth = 320;
-            const int gameHeight = 240;
+            Form frmPacman = new Form("frmPacman");
+            frmPacman.ButtonPressed += frmPacman_ButtonPressed;
 
-            var frm = new Form("zombie distractor");
+            Bitmap bmpGame;
+            Picturebox pbGame;
 
-            // Add panel
-            var pnl = new Panel("pnl1", 0, 0, 800, 480);
-            //pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
-            frm.AddControl(pnl);
+            bmpGame = new Bitmap(320, 240);
 
-            // Add the app bar.
-            //pnl.AddControl(BuildAppBar(frm.Name));
+            if (Prompt.Show("Resolution Adjust", "Would you like to play at 640x480?", Fonts.Calibri18Bold, Fonts.Calibri14, PromptType.YesNo) == PromptResult.Yes)
+            {
+                pbGame = new Picturebox("pbGame", bmpGame, frmPacman.Width / 2 - 320, frmPacman.Height / 2 - 240, 640, 480, BorderStyle.BorderNone);
+                pbGame.ScaleMode = ScaleMode.Stretch;
+            }
+            else
+                pbGame = new Picturebox("pbGame", bmpGame, frmPacman.Width / 2 - 160, frmPacman.Height / 2 - 140, BorderStyle.BorderNone);
 
-            // Add a title.
-            var title = new Label("lblTitle", "Zombie Distractor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
-            pnl.AddControl(title);
+            pbGame.Background = Colors.Black;
+            game = new PacmanGame(bmpGame, pbGame);
+            frmPacman.AddControl(pbGame);
 
-            Graphics.ActiveContainer = frm;
+            Graphics.ActiveContainer = frmPacman;
 
-            // Add Pacman.
-            var surface = Graphics.Screen;
-            _pacmanGame = new PacmanGame(surface, frm.Width / 2 - gameWidth / 2, frm.Height / 2 - gameHeight / 2);
-            _pacmanGame.InputManager.AddInputProvider(new GhiJoystickInputProvider(_joystick));
-            _pacmanGame.Initialize();
+            Thread.Sleep(100);
+            if (joystick != null)
+            {
+                game.InputManager.AddInputProvider(joystick);
+                game.Initialize();
+            }
 
         }
 
         public string SendMessage(object sender, string message, object args = null)
         {
-            switch (message)
+            if (message == "joystick")
             {
-                case "Appbar":
-                    //_ai = (Appbar)sender;
-                    //_ai.AddControl(_aiLink);
-                    return "OK";
-                case "Serial":
-                    return "OK";
-                case "BluetoothAppbarIcon":
-                    //_aiBluetooth = (AppbarIcon)sender;
-                    return "OK";
-                case "FormBackgroundImage":
-                    ((Panel)Graphics.ActiveContainer.GetChildByName("pnl1")).BackgroundImage = (Bitmap)sender;
-                    return "OK";
+                joystick = new GhiJoystickInputProvider((Gadgeteer.Modules.GHIElectronics.Joystick)sender);
+                if (game != null)
+                {
+                    game.InputManager.AddInputProvider(joystick);
+                    game.Initialize();
+                }
+                return "Using";
             }
-            return "OK";
+
+            return string.Empty;
         }
 
         public Image32 SizedApplicationIcon(IconSize RequestedSize)
         {
-            switch (RequestedSize)
-            {
-                case IconSize.Large64x64:
-                case IconSize.Medium48x48:
-                    //return new Image32(Resources.GetBytes(Resources.BinaryResources.large));
-                case IconSize.Normal32x32:
-                case IconSize.Small16x16:
-                    //return new Image32(Resources.GetBytes(Resources.BinaryResources.normal));
-                default:
-                    return null;
-            }
+            return null;
         }
 
         public void Terminate()
         {
-            if (_pacmanGame == null) return;
-            _pacmanGame.Enabled = false;
-            _pacmanGame.Stop();
-            _pacmanGame = null;
+            game.Terminate();
         }
 
-        public ProductDetails ProductDetails
+        private void frmPacman_ButtonPressed(object sender, int ButtonID)
         {
-            get
-            {
-                return new ProductDetails("Zombie Distractor", string.Empty, "Houseoflees", "2012 Ian Lee, Sr.", "1.0.0.0");
-            }
+            Debug.Print("Button: " + ButtonID + " v " + (int)Graphics.ButtonIDs.Home);
+            if ((Skewworks.Tinkr.Graphics.ButtonIDs)ButtonID == Graphics.ButtonIDs.Home)
+                Graphics.Host.TerminateApplication(this);
         }
+
     }
 }

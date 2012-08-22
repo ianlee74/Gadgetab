@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Gadgetab
+namespace ZombieDistractor.Pacman
 {
     
     internal partial class Resources
@@ -20,7 +20,7 @@ namespace Gadgetab
             {
                 if ((Resources.manager == null))
                 {
-                    Resources.manager = new System.Resources.ResourceManager("Gadgetab.Resources", typeof(Resources).Assembly);
+                    Resources.manager = new System.Resources.ResourceManager("ZombieDistractor.Pacman.Resources", typeof(Resources).Assembly);
                 }
                 return Resources.manager;
             }
@@ -33,33 +33,16 @@ namespace Gadgetab
         {
             return ((Microsoft.SPOT.Font)(Microsoft.SPOT.ResourceUtility.GetObject(ResourceManager, id)));
         }
-        internal static byte[] GetBytes(Resources.BinaryResources id)
-        {
-            return ((byte[])(Microsoft.SPOT.ResourceUtility.GetObject(ResourceManager, id)));
-        }
         [System.SerializableAttribute()]
         internal enum BitmapResources : short
         {
-            bluetooth_off = -29737,
-            bluetooth_on = 348,
-            Zombies = 7916,
+            pacman = -28336,
+            maze_walls = -6091,
         }
         [System.SerializableAttribute()]
         internal enum FontResources : short
         {
-            ArialBold11 = -25401,
-            Amienne48AA = -23108,
-            VerdanaBold24 = -7983,
-            small = 13070,
             NinaB = 18060,
-            Verdana12 = 19254,
-        }
-        [System.SerializableAttribute()]
-        internal enum BinaryResources : short
-        {
-            ZombieTwit = -4116,
-            ZombieCannonRemote = 19833,
-            ZombieHealthMonitor = 23799,
         }
     }
 }

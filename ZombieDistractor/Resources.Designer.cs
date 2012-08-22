@@ -25,25 +25,14 @@ namespace ZombieDistractor
                 return Resources.manager;
             }
         }
-        internal static Microsoft.SPOT.Bitmap GetBitmap(Resources.BitmapResources id)
-        {
-            return ((Microsoft.SPOT.Bitmap)(Microsoft.SPOT.ResourceUtility.GetObject(ResourceManager, id)));
-        }
         internal static Microsoft.SPOT.Font GetFont(Resources.FontResources id)
         {
             return ((Microsoft.SPOT.Font)(Microsoft.SPOT.ResourceUtility.GetObject(ResourceManager, id)));
         }
         [System.SerializableAttribute()]
-        internal enum BitmapResources : short
-        {
-            pacman = -28336,
-            maze_walls = -6091,
-        }
-        [System.SerializableAttribute()]
         internal enum FontResources : short
         {
             Amienne48AA = -23108,
-            NinaB = 18060,
         }
     }
 }

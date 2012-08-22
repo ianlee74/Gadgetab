@@ -5,6 +5,11 @@ using Microsoft.SPOT;
 using dotnetwarrior.NetMF.Game;
 using dotnetwarrior.NetMF.Diagnostics;
 
+using Skewworks.Tinkr;
+using Skewworks.Tinkr.Controls;
+
+using Rect = dotnetwarrior.NetMF.Game.Rect;
+
 namespace Pacman
 {
   class Ghost : GameCharacter
@@ -117,6 +122,7 @@ namespace Pacman
 
       Reset();
       
+        
       MessageService.Instance.Subscribe(typeof(Messages.AtePowerPillMessage), HandleAtePowerPillMessage);
       MessageService.Instance.Subscribe(typeof(Messages.PacmanDyingMessage), HandlePacmanDyingMessage);
       MessageService.Instance.Subscribe(typeof(Messages.PacmanDeadMessage), HandlePacmanDeadMessage);
@@ -432,10 +438,11 @@ namespace Pacman
       }
     }
 
-    public override void Draw(Bitmap surface, int xOffset, int yOffset)
+    public override void Draw(Bitmap surface, Picturebox host)
     {
-      if (!Active) return;
-      base.Draw(surface, xOffset, yOffset);
+      if (!Active) 
+          return;
+      base.Draw(surface, host);
     }
   }
 

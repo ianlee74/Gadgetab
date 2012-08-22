@@ -63,8 +63,8 @@ namespace ZombieTwit
                                                     _tweetTimer.Stop();
                                                     return;
                                                 }
-                                                //lb.InsertAt(tweets[lastTweet++], 1);
-                                                lb.AddItem(tweets[lastTweet++]);
+                                                lb.InsertAt(tweets[lastTweet++], 0);
+                                                //lb.AddItem(tweets[lastTweet++]);
                                             };
             _tweetTimer.Start();
         }

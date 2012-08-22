@@ -1,10 +1,14 @@
 // Copyright (c) 2012 Chris Taylor
 
 using Microsoft.SPOT;
-using Gadgeteer;
-using ZombieDistractor;
 using dotnetwarrior.NetMF.Diagnostics;
 using dotnetwarrior.NetMF.Game;
+
+using Skewworks.Tinkr;
+using Skewworks.Tinkr.Controls;
+
+using Rect = dotnetwarrior.NetMF.Game.Rect;
+using Resources = ZombieDistractor.Pacman.Resources;
 
 namespace Pacman
 {
@@ -44,8 +48,7 @@ namespace Pacman
 
     public int Level { get; private set; }
 
-    public PacmanGame(Bitmap surface, int xOffset = 0, int yOffset = 0)
-      : base(surface, xOffset, yOffset)
+    public PacmanGame(Bitmap surface, Picturebox host) : base(surface, host)
     {
       Level = 1;      
     }
@@ -60,7 +63,7 @@ namespace Pacman
       _spriteSheet.MakeTransparent(Microsoft.SPOT.Presentation.Media.Color.Black);
 
       _maze = new Maze();
-      _maze.Draw(Surface, XOffset, YOffset);
+      _maze.Draw(Surface, Host);
 
       _pacman = new Player(_spriteSheet, _maze);
 
@@ -349,53 +352,50 @@ namespace Pacman
 
     protected override void Draw()
     {
-      using (MiniProfiler.Enter("PacmanGame.Draw"))
-      {
-        base.Draw();
+        using (MiniProfiler.Enter("PacmanGame.Draw"))
+        {
+            base.Draw();
 
-        UpdateHud(Surface, _pacman.Score);
+            UpdateHud(Surface, _pacman.Score);
 
-        if (_gameOver)
-        {
-          // Show 'Game Over'
-          Surface.DrawImage(
-            (240 - 72) / 2 + XOffset,
-            ((240 - 8) / 2) + 16 + YOffset,
-            _spriteSheet, 0, 104, 72, 8);
+            if (_gameOver)
+            {
+                // Show 'Game Over'
+                Surface.DrawImage(
+                  (240 - 72) / 2,
+                  ((240 - 8) / 2) + 16,
+                  _spriteSheet, 0, 104, 72, 8);
+            }
+            else if (_readyCountDown.IsRunning)
+            {
+                // Show 'Ready!' Image
+                Surface.DrawImage(
+                  (240 - 48) / 2,
+                  ((240 - 8) / 2) + 16,
+                  _spriteSheet, 80, 96, 48, 8);
+            }
+            else if (_showBonusScoreCountDown.IsRunning)
+                _currentBonusSprite.Draw(Surface, Host);
+
         }
-        else if (_readyCountDown.IsRunning)
-        {
-          // Show 'Ready!' Image
-          Surface.DrawImage(
-            (240 - 48) / 2 + XOffset,
-            ((240 - 8) / 2) + 16 + YOffset,
-            _spriteSheet, 80, 96, 48, 8);
-        }
-        else if (_showBonusScoreCountDown.IsRunning)
-        {
-          _currentBonusSprite.Draw(Surface, XOffset, YOffset);
-        }
-      }
     }
 
     private void UpdateHud(Bitmap surface, int score)
     {
-      int y = 10 + YOffset;
-      int x = 244 + XOffset;
+      int y = 10;
+      int x = 244;
 
-      surface.DrawText("Level", _font, Color.White, x, y);
-      surface.DrawText(Level.ToString(), _font, Color.White, x, y + 20);
-
-      y += 45;
-      surface.DrawText("Score", _font, Color.White, x, y);
-      surface.DrawText(score.ToString(), _font, Color.White, x, y + 20);
+      surface.DrawText("Level", _font, Colors.White, x, y);
+      surface.DrawText(Level.ToString(), _font, Colors.White, x, y + 20);
 
       y += 45;
-      surface.DrawText("Lives", _font, Color.White, x, y);
+      surface.DrawText("Score", _font, Colors.White, x, y);
+      surface.DrawText(score.ToString(), _font, Colors.White, x, y + 20);
+
+      y += 45;
+      surface.DrawText("Lives", _font, Colors.White, x, y);
       for (int i = 0; i < _pacman.Lives; ++i)
-      {
-        surface.DrawImage(x + (i << 4), y + 20, _spriteSheet, 32, 0, 16, 16);        
-      }
+        surface.DrawImage(x + (i << 4), y + 20, _spriteSheet, 32, 0, 16, 16);
     }
   }
 }

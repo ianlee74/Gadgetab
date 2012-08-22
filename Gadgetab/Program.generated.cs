@@ -18,6 +18,7 @@ namespace Gadgetab
         // GTM.Module definitions
         Gadgeteer.Modules.GHIElectronics.Display_CP7 display_CP7;
         Gadgeteer.Modules.GHIElectronics.Bluetooth bluetooth;
+        Gadgeteer.Modules.GHIElectronics.SDCard sdCard;
 
         public static void Main()
         {
@@ -36,6 +37,8 @@ namespace Gadgetab
             bluetooth = new GTM.GHIElectronics.Bluetooth(4);
 		
             display_CP7 = new GTM.GHIElectronics.Display_CP7(10, 11, 12, 5);
+		
+            sdCard = new GTM.GHIElectronics.SDCard(8);
 
         }
     }

@@ -4,6 +4,9 @@ using Microsoft.SPOT;
 using dotnetwarrior.NetMF.Game;
 using dotnetwarrior.NetMF.Diagnostics;
 
+using Skewworks.Tinkr;
+using Skewworks.Tinkr.Controls;
+
 namespace Pacman
 {
   abstract class GameCharacter : Sprite
@@ -106,9 +109,9 @@ namespace Pacman
       }
     }
 
-    public override void Draw(Bitmap surface, int xOffset, int yOffset)
+    public override void Draw(Bitmap surface, Picturebox host)
     {
-      base.Draw(surface, xOffset, yOffset);
+      base.Draw(surface, host);
     }
 
     protected Direction GetOppositeDirection()

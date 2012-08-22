@@ -29,12 +29,12 @@ namespace Gadgetab
         private static CP7TouchHandler CP7Handler;
         private static IApplication _usingBluetooth = null;
 
-        readonly Font _fntHuge = Resources.GetFont(Resources.FontResources.Amienne48AA);
-        readonly Font _fntVerdana12 = Resources.GetFont(Resources.FontResources.Verdana12);
-        readonly Font _fntArialBold11 = Resources.GetFont(Resources.FontResources.ArialBold11);
-        private readonly Font _fntVerdanaBold24 = Resources.GetFont(Resources.FontResources.VerdanaBold24);
+        private static readonly Font _fntHuge = Resources.GetFont(Resources.FontResources.Amienne48AA);
+        private static readonly Font _fntVerdana12 = Resources.GetFont(Resources.FontResources.Verdana12);
+        private static readonly Font _fntArialBold11 = Resources.GetFont(Resources.FontResources.ArialBold11);
+        private static readonly Font _fntVerdanaBold24 = Resources.GetFont(Resources.FontResources.VerdanaBold24);
 
-        private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor", "zombie health monitor" };
+        private readonly string[] _menuItems = new[] { "zombie cannon remote", "zombie twit", "zombie distractor", "zombie health monitor", "load app from SD" };
 
         // This method is run when the mainboard is powered up or reset.   
         void ProgramStarted()
@@ -51,6 +51,11 @@ namespace Gadgetab
             Graphics.Host.ApplicationLaunched += Host_ApplicationLaunched;
             Graphics.Host.ApplicationClosing += Host_ApplicationClosing;
 
+            // SD Card
+            var sdMonitor = new GT.Timer(3000);
+            sdMonitor.Tick += timer => { if (sdCard.IsCardInserted && !sdCard.IsCardMounted) sdCard.MountSDCard(); };
+            sdMonitor.Start();
+            
             // Launch Home
             new Thread(Home).Start();
         }
@@ -145,9 +150,10 @@ namespace Gadgetab
             return appBar;
         }
 */
-        private static void OnAppMenuSelected() //object sender, int id, string value)
+        private void OnAppMenuSelected() //object sender, int id, string value)
         {
             byte[] bin = null;
+            string filePath = null;
             switch (_appBar.SelectedIndex)
             {
                 case 0: // "zombie cannon remote":
@@ -162,180 +168,40 @@ namespace Gadgetab
                 case 3: //"zombie health monitor":
                     bin = Resources.GetBytes(Resources.BinaryResources.ZombieHealthMonitor);
                     break;
+                case 4: // "load app from SD"
+                    filePath = LoadAppFromSD();
+#if DEBUG
+                    Debug.Print("App selected: " + filePath);
+#endif
+                    break;
             }
             if (bin == null) return;
             var w = new Waiter("Loading Application", Fonts.Calibri14);
             w.Start();
-            Graphics.Host.LaunchApplication(bin);
+            if (filePath == null)
+            {
+                Graphics.Host.LaunchApplication(bin);
+            }
+            else
+            {
+                Graphics.Host.LaunchApplication(filePath);
+            }
             IContainer act = Graphics.ActiveContainer;
             w.Stop();
             Graphics.ActiveContainer = act;
             Graphics.ActiveContainer.Invalidate();
         }
 
-/* Old CP7 Setup
-#region CP7 Setup
-
-        private Point ptLast;
-        private Point _ptDownAt;
-        private long _lgDownAt;
-        private TouchType _tt;
-        private bool _tDown;
-        private bool _cancelSwipe;
-
-        private void SetupCP7(Display_CP7 CP7)
+        private string LoadAppFromSD()
         {
-            CP7.ScreenPressed += new Display_CP7.TouchEventHandler(display_CP7_ScreenPressed);
-            CP7.screenReleased += new Display_CP7.TouchEventHandlerTouchReleased(display_CP7_screenReleased);
-            CP7.gestureDetected += new Display_CP7.TouchGestureDetected(display_CP7_gestureDetected);
-            CP7.homePressed += new Display_CP7.TouchEventHandlerHomeButton(display_CP7_homePressed);
-            CP7.menuPressed += new Display_CP7.TouchEventHandlerMenuButton(display_CP7_menuPressed);
-            CP7.backPressed += new Display_CP7.TouchEventHandlerBackButton(display_CP7_backPressed);
-        }
-
-        private void display_CP7_ScreenPressed(Display_CP7 sender, Display_CP7.TouchStatus touchStatus)
-        {
-            ptLast = new Point(touchStatus.touchPos[0].xPos, touchStatus.touchPos[0].yPos);
-
-            if (ptLast.X < 800)
+            if (!sdCard.IsCardMounted && !sdCard.IsCardInserted)
             {
+                var result = Prompt.Show("Insert SD", "Cannot run without SD card and files", Fonts.Calibri18Bold, Fonts.Calibri14, PromptType.AbortContinue);
+                if(result == PromptResult.Abort) return null;
+                sdCard.MountSDCard();
+            }           
 
-                if (!_tDown)
-                {
-                    _tDown = true;
-                    _tt = TouchType.NoGesture;
-                    _cancelSwipe = false;
-                    _ptDownAt = ptLast;
-                    _lgDownAt = DateTime.Now.Ticks;
-
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.TouchDown, ptLast);
-                }
-                else
-                {
-                    if (!_cancelSwipe)
-                        CalcDir(ptLast);
-
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.TouchMove, ptLast);
-                }
-            }
+            return FileDialog.OpenFile("Load an App", _fntVerdana12, _fntVerdana12);
         }
-
-        private void display_CP7_screenReleased(Display_CP7 sender)
-        {
-            _tDown = false;
-
-            if (!_cancelSwipe && _tt != TouchType.NoGesture)
-                CalcForce(ptLast);
-
-            if (ptLast.X > 800)
-            {
-                if (ptLast.Y >= 0 && ptLast.Y <= 50)
-                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Up);
-                else if (ptLast.Y >= 100 && ptLast.Y <= 150)
-                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Select);
-                else if (ptLast.Y >= 200 && ptLast.Y <= 250)
-                    TinkrCore.Instance.RaiseButtonReleased((int)TinkrCore.ButtonIDs.Down);
-            }
-            else
-                TinkrCore.Instance.RaiseTouchEvent(TouchType.TouchUp, ptLast);
-        }
-
-        private void display_CP7_gestureDetected(Display_CP7 sender, Display_CP7.Gesture_ID id)
-        {
-            switch (id)
-            {
-                case Display_CP7.Gesture_ID.Move_Down:
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.GestureDown, ptLast);
-                    break;
-                case Display_CP7.Gesture_ID.Move_Left:
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.GestureLeft, ptLast);
-                    break;
-                case Display_CP7.Gesture_ID.Move_Right:
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.GestureRight, ptLast);
-                    break;
-                case Display_CP7.Gesture_ID.Move_Up:
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.GestureUp, ptLast);
-                    break;
-                case Display_CP7.Gesture_ID.No_Gesture:
-                    TinkrCore.Instance.RaiseTouchEvent(TouchType.NoGesture, ptLast);
-                    break;
-                default:
-                    TinkrCore.Instance.RaiseTouchEvent((TouchType)id, ptLast);
-                    break;
-            }
-        }
-
-        private void display_CP7_homePressed(Display_CP7 sender)
-        {
-            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Up);
-        }
-
-        private void display_CP7_menuPressed(Display_CP7 sender)
-        {
-            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Select);
-        }
-
-        private void display_CP7_backPressed(Display_CP7 sender)
-        {
-            TinkrCore.Instance.RaiseButtonPressed((int)TinkrCore.ButtonIDs.Down);
-        }
-
-        private void CalcDir(Point e)
-        {
-            TouchType sw = TouchType.NoGesture;
-            int d;
-
-            d = (e.Y - _ptDownAt.Y);
-            if (d > 50)
-                sw = TouchType.GestureDown;
-            else if (d < -50)
-                sw = TouchType.GestureUp;
-
-            d = (e.X - _ptDownAt.X);
-            if (d > 50)
-            {
-                if (sw == TouchType.GestureUp)
-                    sw = TouchType.GestureUpRight;
-                else if (sw == TouchType.GestureDown)
-                    sw = TouchType.GestureDownRight;
-                else
-                    sw = TouchType.GestureRight;
-            }
-            else if (d < -50)
-            {
-                if (sw == TouchType.GestureUp)
-                    sw = TouchType.GestureUpLeft;
-                else if (sw == TouchType.GestureDown)
-                    sw = TouchType.GestureDownLeft;
-                else
-                    sw = TouchType.GestureLeft;
-            }
-
-            if (_tt == TouchType.NoGesture)
-                _tt = sw;
-            else if (_tt != sw)
-                _cancelSwipe = true;
-        }
-
-        private void CalcForce(Point e)
-        {
-            // Calc by time alone
-            float dDiff = DateTime.Now.Ticks - _lgDownAt;
-
-            if (dDiff > TimeSpan.TicksPerSecond * .75)
-                return;
-
-            // 1.0 = < 1/7th second
-            dDiff = TimeSpan.TicksPerSecond / 7 / dDiff;
-            if (dDiff > .99)
-                dDiff = .99f;
-            else if (dDiff < 0)
-                dDiff = 0;
-
-            // Raise TouchEvent
-            TinkrCore.Instance.RaiseTouchEvent(_tt, e, dDiff);
-        }
-#endregion
-*/
     }
 }

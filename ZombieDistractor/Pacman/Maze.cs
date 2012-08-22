@@ -2,9 +2,14 @@
 
 using Microsoft.SPOT;
 using Microsoft.SPOT.Presentation.Media;
-using ZombieDistractor;
 using dotnetwarrior.NetMF.Game;
 using dotnetwarrior.NetMF.Diagnostics;
+
+using Skewworks.Tinkr;
+using Skewworks.Tinkr.Controls;
+
+using Rect = dotnetwarrior.NetMF.Game.Rect;
+using Resources = ZombieDistractor.Pacman.Resources;
 
 namespace Pacman
 {
@@ -152,12 +157,12 @@ namespace Pacman
       return result;
     }
 
-    public override void Draw(Bitmap surface, int xOffset, int yOffset)
+    public override void Draw(Bitmap surface, Picturebox host)
     {
-      surface.DrawImage(xOffset, yOffset, _cache, 0, 0, 320, 240);
+      surface.DrawImage(0, 0, _cache, 0, 0, 320, 240);
       if (_bonusItem != BonusItemType.None)
       {
-        surface.DrawImage(112 + xOffset, 144 + yOffset, _mazeSpriteSheet, 
+        surface.DrawImage(112, 144, _mazeSpriteSheet, 
           _bonusItemRect.X, _bonusItemRect.Y, 
           _bonusItemRect.Width, _bonusItemRect.Height);
       }
