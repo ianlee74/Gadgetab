@@ -56,6 +56,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ZombieHeart.jpg" />
     <Content Include="Resources\Zombies.gif" />
   </ItemGroup>
   <ItemGroup>

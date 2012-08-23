@@ -40,8 +40,12 @@ namespace ZombieHealthMonitor
             pnl.AddControl(title);
 
             // Add Heart Rate Graph.
-            var graph = new Picturebox("heartRateGraph", null, 100, 200, 600, 200);
+            var graph = new Picturebox("heartRateGraph", null, 50, 200, 600, 200);
             pnl.AddControl(graph);
+
+            // Add heart picture
+            var heart = new Picturebox("heart", Resources.GetBitmap(Resources.BitmapResources.ZombieHeart), 690, 220, BorderStyle.BorderNone);
+            pnl.AddControl(heart);
 
             Graphics.ActiveContainer = frm;
 

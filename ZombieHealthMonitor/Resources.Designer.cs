@@ -42,6 +42,7 @@ namespace ZombieHealthMonitor
         internal enum BitmapResources : short
         {
             Zombies = 7916,
+            ZombieHeart = 19262,
         }
     }
 }

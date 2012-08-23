@@ -148,10 +148,4 @@
   <data name="ZombieCannonRemote" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\zombiecannonremote.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
   </data>
-  <data name="ZombieHealthMonitor" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombiehealthmonitor.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
-  <data name="ZombieTwit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\zombietwit.pe;System.Byte[], mscorlib, Version=4.2.0.0, Culture=neutral, PublicKeyToken=null</value>
-  </data>
 </root>

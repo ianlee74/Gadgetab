@@ -32,17 +32,11 @@ namespace ZombieCannonRemote
             //pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
             
-            // Add the app bar.
-            //pnl.AddControl(_ai);
-
             // Add a title.
             var title = new Label("lblTitle", "Zombie Cannon Remote", _fntHuge, frm.Width / 2 - 175, 30) { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
             // Add a fire button.
-            //var pic1 = new Picturebox("launchBtn", Resources.GetBitmap(Resources.BitmapResources.LaunchButton), frm.Width / 2 - 150, frm.Height/2 - 150, 300, 300);
-            //pic1.ButtonPressed += (sender, id) => Debug.Print("FIRE!");
-            //pnl.AddControl(pic1);
             var pic1 = new Skewworks.Tinkr.Controls.Panel("launchBtn", frm.Width / 2 - 150, frm.Height / 2 - 150, 300, 300);
             pic1.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.LaunchButton);
             pic1.Tap += (sender, id) => Debug.Print("FIRE!");
@@ -67,7 +61,7 @@ namespace ZombieCannonRemote
                     //_aiBluetooth = (AppbarIcon)sender;
                     return "OK";
                 case "FormBackgroundImage":
-                    ((Panel) Graphics.ActiveContainer.GetChildByName("pnl1")).BackgroundImage = (Bitmap)sender;
+                    //((Panel) Graphics.ActiveContainer.GetChildByName("pnl1")).BackgroundImage = (Bitmap)sender;
                     return "OK";
             }
             return "OK";
