@@ -160,13 +160,13 @@ namespace Gadgetab
                     bin = Resources.GetBytes(Resources.BinaryResources.ZombieCannonRemote);
                     break;
                 case 1: // "zombie twit":
-                    //bin = Resources.GetBytes(Resources.BinaryResources.ZombieTwit);
+                    bin = Resources.GetBytes(Resources.BinaryResources.ZombieTwit);
                     break;
                 case 2: //"zombie distractor":
                     //bin = Resources.GetBytes(Resources.BinaryResources.ZombieDistractor);
                     break;
                 case 3: //"zombie health monitor":
-                    //bin = Resources.GetBytes(Resources.BinaryResources.ZombieHealthMonitor);
+                    bin = Resources.GetBytes(Resources.BinaryResources.ZombieHealthMonitor);
                     break;
                 case 4: // "load app from SD"
                     filePath = LoadAppFromSD();
