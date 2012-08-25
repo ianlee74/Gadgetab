@@ -42,6 +42,7 @@ namespace ZombieCannonRemote
         internal enum BitmapResources : short
         {
             LaunchButton = -528,
+            Zombies = 7916,
         }
     }
 }

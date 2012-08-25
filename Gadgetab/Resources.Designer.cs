@@ -57,7 +57,9 @@ namespace Gadgetab
         [System.SerializableAttribute()]
         internal enum BinaryResources : short
         {
+            ZombieTwit = -4116,
             ZombieCannonRemote = 19833,
+            ZombieHealthMonitor = 23799,
         }
     }
 }

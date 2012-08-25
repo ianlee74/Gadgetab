@@ -29,7 +29,7 @@ namespace ZombieCannonRemote
 
             // Add panel
             var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            //pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
+            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
             frm.AddControl(pnl);
             
             // Add a title.

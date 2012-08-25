@@ -30,17 +30,18 @@ namespace ZombieHealthMonitor
             var frm = new Form("zombie health monitor");
 
             // Add panel
-            var pnl = new Skewworks.Tinkr.Controls.Panel("pnl1", 0, 0, 800, 480);
-            pnl.BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies);
+            var pnl = new Panel("pnl1", 0, 0, 800, 480)
+                          {BackgroundImage = Resources.GetBitmap(Resources.BitmapResources.Zombies)};
             frm.AddControl(pnl);
 
 
             // Add a title.
-            var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) { Color = Gadgeteer.Color.Yellow };
+            var title = new Label("lblTitle", "Zombie Health Monitor", _fntHuge, frm.Width / 2 - 140, 30) 
+                            { Color = Gadgeteer.Color.Yellow };
             pnl.AddControl(title);
 
             // Add Heart Rate Graph.
-            var graph = new Picturebox("heartRateGraph", null, 50, 200, 600, 200);
+            var graph = new Picturebox("heartRateGraph", null, 50, 200, 600, 200, BorderStyle.BorderNone);
             pnl.AddControl(graph);
 
             // Add heart picture
